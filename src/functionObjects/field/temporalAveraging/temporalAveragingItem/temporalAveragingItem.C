@@ -32,6 +32,11 @@ const Foam::word Foam::functionObjects::temporalAveragingItem::EXT_MEAN
     "Mean"
 );
 
+const Foam::word Foam::functionObjects::temporalAveragingItem::EXT_CUBEDMEAN
+(
+    "3Mean"
+);
+
 const Foam::word Foam::functionObjects::temporalAveragingItem::EXT_PRIME2MEAN
 (
     "Prime2Mean"
@@ -63,6 +68,8 @@ Foam::functionObjects::temporalAveragingItem::temporalAveragingItem()
     fieldName_("unknown"),
     mean_(0),
     meanFieldName_("unknown"),
+    cubedMean_(0),
+    cubedMeanFieldName_("unknown"),
     prime2Mean_(0),
     prime2MeanFieldName_("unknown"),
     primeUPrimeMean_(0),
@@ -81,6 +88,8 @@ Foam::functionObjects::temporalAveragingItem::temporalAveragingItem
     fieldName_(faItem.fieldName_),
     mean_(faItem.mean_),
     meanFieldName_(faItem.meanFieldName_),
+    cubedMean_(faItem.cubedMean_),
+    cubedMeanFieldName_(faItem.cubedMeanFieldName_),
     prime2Mean_(faItem.prime2Mean_),
     prime2MeanFieldName_(faItem.prime2MeanFieldName_),
     primeUPrimeMean_(faItem.primeUPrimeMean_),
@@ -116,6 +125,8 @@ void Foam::functionObjects::temporalAveragingItem::operator=
     fieldName_ = rhs.fieldName_;
     mean_ = rhs.mean_;
     meanFieldName_ = rhs.meanFieldName_;
+    cubedMean_ = rhs.cubedMean_;
+    cubedMeanFieldName_ = rhs.cubedMeanFieldName_;
     prime2Mean_ = rhs.prime2Mean_;
     prime2MeanFieldName_ = rhs.prime2MeanFieldName_;
     primeUPrimeMean_ = rhs.primeUPrimeMean_;

@@ -54,6 +54,14 @@ void Foam::functionObjects::temporalAveraging::resetFields()
             }
         }
 
+        if (faItems_[i].cubedMean())
+        {
+            if (obr_.found(faItems_[i].cubedMeanFieldName()))
+            {
+                obr_.checkOut(*obr_[faItems_[i].cubedMeanFieldName()]);
+            }
+        }
+
         if (faItems_[i].prime2Mean())
         {
             if (obr_.found(faItems_[i].prime2MeanFieldName()))
@@ -106,6 +114,16 @@ void Foam::functionObjects::temporalAveraging::initialize()
         addMeanField<sphericalTensor>(fieldi);
         addMeanField<symmTensor>(fieldi);
         addMeanField<tensor>(fieldi);
+    }
+
+    // Add cubed mean fields to the field lists
+    forAll(faItems_, fieldi)
+    {
+        addCubedMeanField<scalar>(fieldi);
+        addCubedMeanField<vector>(fieldi);
+        addCubedMeanField<sphericalTensor>(fieldi);
+        addCubedMeanField<symmTensor>(fieldi);
+        addCubedMeanField<tensor>(fieldi);
     }
 
     // Add prime-squared mean fields to the field lists
@@ -179,6 +197,12 @@ void Foam::functionObjects::temporalAveraging::calcAverages()
     calculateMeanFields<sphericalTensor>();
     calculateMeanFields<symmTensor>();
     calculateMeanFields<tensor>();
+
+    calculateCubedMeanFields<scalar>();
+    calculateCubedMeanFields<vector>();
+    calculateCubedMeanFields<sphericalTensor>();
+    calculateCubedMeanFields<symmTensor>();
+    calculateCubedMeanFields<tensor>();
 
     calculatePrime2MeanFields<scalar, scalar>();
     calculatePrime2MeanFields<vector, symmTensor>();

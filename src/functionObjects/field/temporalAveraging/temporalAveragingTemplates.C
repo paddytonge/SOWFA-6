@@ -99,6 +99,75 @@ void Foam::functionObjects::temporalAveraging::addMeanField(const label fieldi)
 }
 
 
+template<class Type>
+void Foam::functionObjects::temporalAveraging::addCubedMeanFieldType(const label fieldi)
+{
+    const word& fieldName = faItems_[fieldi].fieldName();
+    const word& cubedMeanFieldName = faItems_[fieldi].cubedMeanFieldName();
+
+    Log << "    Reading/initialising field " << cubedMeanFieldName << endl;
+
+    if (obr_.foundObject<Type>(cubedMeanFieldName))
+    {}
+    else if (obr_.found(cubedMeanFieldName))
+    {
+        Log << "    Cannot allocate cubed average field " << cubedMeanFieldName
+            << " since an object with that name already exists."
+            << " Disabling averaging for field." << endl;
+
+        faItems_[fieldi].mean() = false;
+    }
+    else
+    {
+        const Type& baseField = obr_.lookupObject<Type>(fieldName);
+
+        // Store on registry
+        obr_.store
+        (
+            new Type
+            (
+                IOobject
+                (
+                    cubedMeanFieldName,
+                    obr_.time().timeName(obr_.time().startTime().value()),
+                    obr_,
+                    restartOnOutput_
+                  ? IOobject::NO_READ
+                  : IOobject::READ_IF_PRESENT,
+                    IOobject::NO_WRITE
+                ),
+                cmptMultiply(cmptMultiply(baseField,baseField),baseField)
+            )
+        );
+    }
+}
+
+
+template<class Type>
+void Foam::functionObjects::temporalAveraging::addCubedMeanField(const label fieldi)
+{
+    if (faItems_[fieldi].cubedMean())
+    {
+        typedef GeometricField<Type, fvPatchField, volMesh>
+            VolFieldType;
+
+        typedef GeometricField<Type, fvsPatchField, surfaceMesh>
+            SurfaceFieldType;
+
+        const word& fieldName = faItems_[fieldi].fieldName();
+
+        if (obr_.foundObject<VolFieldType>(fieldName))
+        {
+            addCubedMeanFieldType<VolFieldType>(fieldi);
+        }
+        else if (obr_.foundObject<SurfaceFieldType>(fieldName))
+        {
+            addCubedMeanFieldType<SurfaceFieldType>(fieldi);
+        }
+    }
+}
+
+
 template<class Type1, class Type2>
 void Foam::functionObjects::temporalAveraging::addPrime2MeanFieldType
 (
@@ -326,6 +395,64 @@ void Foam::functionObjects::temporalAveraging::calculateMeanFields() const
         {
             calculateMeanFieldType<VolFieldType>(i);
             calculateMeanFieldType<SurfaceFieldType>(i);
+        }
+    }
+}
+
+
+template<class Type>
+void Foam::functionObjects::temporalAveraging::calculateCubedMeanFieldType
+(
+    const label fieldi
+) const
+{
+    const word& fieldName = faItems_[fieldi].fieldName();
+
+    if (obr_.foundObject<Type>(fieldName))
+    {
+        const Type& baseField = obr_.lookupObject<Type>(fieldName);
+
+        Type& cubedMeanField =
+            obr_.lookupObjectRef<Type>(faItems_[fieldi].cubedMeanFieldName());
+
+        scalar dt = obr_.time().deltaTValue();
+        scalar Dt = totalTime_[fieldi];
+
+        if (faItems_[fieldi].iterBase())
+        {
+            dt = 1;
+            Dt = scalar(totalIter_[fieldi]);
+        }
+
+        scalar beta = dt/Dt;
+
+        if (faItems_[fieldi].window() > 0)
+        {
+            const scalar w = faItems_[fieldi].window();
+
+            if (Dt - dt >= w)
+            {
+                beta = dt/w;
+            }
+        }
+
+        cubedMeanField = (1 - beta)*cubedMeanField + beta*cmptMultiply(cmptMultiply(baseField,baseField),baseField);
+    }
+}
+
+
+template<class Type>
+void Foam::functionObjects::temporalAveraging::calculateCubedMeanFields() const
+{
+    typedef GeometricField<Type, fvPatchField, volMesh> VolFieldType;
+    typedef GeometricField<Type, fvsPatchField, surfaceMesh> SurfaceFieldType;
+
+    forAll(faItems_, i)
+    {
+        if (faItems_[i].cubedMean())
+        {
+            calculateCubedMeanFieldType<VolFieldType>(i);
+            calculateCubedMeanFieldType<SurfaceFieldType>(i);
         }
     }
 }
@@ -572,6 +699,12 @@ void Foam::functionObjects::temporalAveraging::writeFields() const
         if (faItems_[i].mean())
         {
             const word& fieldName = faItems_[i].meanFieldName();
+            writeFieldType<VolFieldType>(fieldName);
+            writeFieldType<SurfaceFieldType>(fieldName);
+        }
+        if (faItems_[i].cubedMean())
+        {
+            const word& fieldName = faItems_[i].cubedMeanFieldName();
             writeFieldType<VolFieldType>(fieldName);
             writeFieldType<SurfaceFieldType>(fieldName);
         }

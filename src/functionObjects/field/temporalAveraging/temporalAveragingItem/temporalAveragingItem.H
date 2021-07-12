@@ -86,6 +86,9 @@ public:
             //- Mean average
             static const word EXT_MEAN;
 
+            //- Cubed mean average
+            static const word EXT_CUBEDMEAN;
+
             //- Prime-squared average
             static const word EXT_PRIME2MEAN;
 
@@ -112,6 +115,12 @@ private:
 
         //- Name of mean field
         word meanFieldName_;
+
+        //- Compute cubed mean flag
+        Switch cubedMean_;
+
+        //- Name of mean field
+        word cubedMeanFieldName_;
 
         //- Compute prime-squared mean flag
         Switch prime2Mean_;
@@ -182,6 +191,24 @@ public:
             const word& meanFieldName() const
             {
                 return meanFieldName_;
+            }
+
+            //- Return const access to the cubed mean flag
+            const Switch& cubedMean() const
+            {
+                return cubedMean_;
+            }
+
+            //- Return non-const access to the cubed mean flag
+            Switch& cubedMean()
+            {
+                return cubedMean_;
+            }
+
+            //- Return const access to the cubed mean field name
+            const word& cubedMeanFieldName() const
+            {
+                return cubedMeanFieldName_;
             }
 
             //- Return const access to the prime-squared mean flag
@@ -266,6 +293,8 @@ public:
                 a.fieldName_ == b.fieldName_
              && a.mean_ == b.mean_
              && a.meanFieldName_ == b.meanFieldName_
+             && a.cubedMean_ == b.cubedMean_
+             && a.cubedMeanFieldName_ == b.cubedMeanFieldName_
              && a.prime2Mean_ == b.prime2Mean_
              && a.prime2MeanFieldName_ == b.prime2MeanFieldName_
              && a.primeUPrimeMean_ == b.primeUPrimeMean_

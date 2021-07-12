@@ -91,6 +91,7 @@ Description
             U
             {
                 mean            on;
+                cubedMean       on;
                 prime2Mean      on;
                 primeUPrimeMean off;
                 base            time;
@@ -220,6 +221,14 @@ protected:
             template<class Type>
             void addMeanField(const label fieldi);
 
+            //- Add cubed mean average field to database
+            template<class Type>
+            void addCubedMeanFieldType(const label fieldi);
+
+            //- Add cubed mean average field to database
+            template<class Type>
+            void addCubedMeanField(const label fieldi);
+
             //- Add prime-squared average field to database
             template<class Type1, class Type2>
             void addPrime2MeanFieldType(const label fieldi);
@@ -249,6 +258,14 @@ protected:
             //- Calculate mean average fields
             template<class Type>
             void calculateMeanFields() const;
+
+            //- Calculate cubed mean average fields
+            template<class Type>
+            void calculateCubedMeanFieldType(const label fieldi) const;
+
+            //- Calculate cubed mean average fields
+            template<class Type>
+            void calculateCubedMeanFields() const;
 
             //- Calculate prime-squared average fields
             template<class Type1, class Type2>

@@ -34,6 +34,8 @@ Foam::functionObjects::temporalAveragingItem::temporalAveragingItem(Istream& is)
     fieldName_("unknown"),
     mean_(0),
     meanFieldName_("unknown"),
+    cubedMean_(0),
+    cubedMeanFieldName_("unknown"),
     prime2Mean_(0),
     prime2MeanFieldName_("unknown"),
     primeUPrimeMean_(0),
@@ -51,6 +53,7 @@ Foam::functionObjects::temporalAveragingItem::temporalAveragingItem(Istream& is)
 
     fieldName_ = entry.keyword();
     entry.lookup("mean") >> mean_;
+    entry.lookup("cubedMean") >> cubedMean_;
     entry.lookup("prime2Mean") >> prime2Mean_;
     entry.lookup("primeUPrimeMean") >> primeUPrimeMean_;
     base_ = baseTypeNames_[entry.lookup("base")];
@@ -58,11 +61,13 @@ Foam::functionObjects::temporalAveragingItem::temporalAveragingItem(Istream& is)
     windowName_ = entry.lookupOrDefault<word>("windowName", "");
 
     meanFieldName_ = fieldName_ + EXT_MEAN;
+    cubedMeanFieldName_ = fieldName_ + EXT_CUBEDMEAN;
     prime2MeanFieldName_ = fieldName_ + EXT_PRIME2MEAN;
     primeUPrimeMeanFieldName_ = fieldName_ + EXT_PRIMEUPRIMEMEAN;
     if ((window_ > 0) && (windowName_ != ""))
     {
         meanFieldName_ = meanFieldName_ + "_" + windowName_;
+        cubedMeanFieldName_ = cubedMeanFieldName_ + "_" + windowName_;
         prime2MeanFieldName_ = prime2MeanFieldName_ + "_" + windowName_;
         primeUPrimeMeanFieldName_ = primeUPrimeMeanFieldName_ + "_" + windowName_;
     }
@@ -87,6 +92,7 @@ Foam::Istream& Foam::functionObjects::operator>>
 
     faItem.fieldName_ = entry.keyword();
     entry.lookup("mean") >> faItem.mean_;
+    entry.lookup("cubedMean") >> faItem.cubedMean_;
     entry.lookup("prime2Mean") >> faItem.prime2Mean_;
     entry.lookup("primeUPrimeMean") >> faItem.primeUPrimeMean_;
     faItem.base_ = faItem.baseTypeNames_[entry.lookup("base")];
@@ -94,6 +100,7 @@ Foam::Istream& Foam::functionObjects::operator>>
     faItem.windowName_ = entry.lookupOrDefault<word>("windowName", "");
 
     faItem.meanFieldName_ = faItem.fieldName_ + temporalAveragingItem::EXT_MEAN;
+    faItem.cubedMeanFieldName_ = faItem.fieldName_ + temporalAveragingItem::EXT_CUBEDMEAN;
     faItem.prime2MeanFieldName_ =
         faItem.fieldName_ + temporalAveragingItem::EXT_PRIME2MEAN;
     faItem.primeUPrimeMeanFieldName_ =
@@ -103,6 +110,9 @@ Foam::Istream& Foam::functionObjects::operator>>
     {
         faItem.meanFieldName_ =
             faItem.meanFieldName_ + "_" + faItem.windowName_;
+
+        faItem.cubedMeanFieldName_ =
+            faItem.cubedMeanFieldName_ + "_" + faItem.windowName_;
 
         faItem.prime2MeanFieldName_ =
             faItem.prime2MeanFieldName_ + "_" + faItem.windowName_;
@@ -130,6 +140,9 @@ Foam::Ostream& Foam::functionObjects::operator<<
 
     os.writeKeyword("mean")
         << faItem.mean_ << token::END_STATEMENT << nl;
+
+    os.writeKeyword("cubedMean")
+        << faItem.cubedMean_ << token::END_STATEMENT << nl;
 
     os.writeKeyword("prime2Mean")
         << faItem.prime2Mean_ << token::END_STATEMENT << nl;
