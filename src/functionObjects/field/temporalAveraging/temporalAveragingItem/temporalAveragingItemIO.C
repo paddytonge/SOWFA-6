@@ -52,11 +52,11 @@ Foam::functionObjects::temporalAveragingItem::temporalAveragingItem(Istream& is)
     const dictionaryEntry entry(dictionary::null, is);
 
     fieldName_ = entry.keyword();
-    entry.lookup("mean") >> mean_;
-    entry.lookup("cubedMean") >> cubedMean_;
-    entry.lookup("prime2Mean") >> prime2Mean_;
-    entry.lookup("primeUPrimeMean") >> primeUPrimeMean_;
-    base_ = baseTypeNames_[entry.lookup("base")];
+    mean_ = entry.lookupOrDefault<bool>("mean", true);
+    cubedMean_ = entry.lookupOrDefault<bool>("cubedMean", false);
+    prime2Mean_ = entry.lookupOrDefault<bool>("prime2Mean", false);
+    primeUPrimeMean_ = entry.lookupOrDefault<bool>("primeUPrimeMean", false);
+    base_ = baseTypeNames_[entry.lookupOrDefault<word>("base", "time")];
     window_ = entry.lookupOrDefault<scalar>("window", -1.0);
     windowName_ = entry.lookupOrDefault<word>("windowName", "");
 
@@ -91,11 +91,11 @@ Foam::Istream& Foam::functionObjects::operator>>
     const dictionaryEntry entry(dictionary::null, is);
 
     faItem.fieldName_ = entry.keyword();
-    entry.lookup("mean") >> faItem.mean_;
-    entry.lookup("cubedMean") >> faItem.cubedMean_;
-    entry.lookup("prime2Mean") >> faItem.prime2Mean_;
-    entry.lookup("primeUPrimeMean") >> faItem.primeUPrimeMean_;
-    faItem.base_ = faItem.baseTypeNames_[entry.lookup("base")];
+    faItem.mean_ = entry.lookupOrDefault<bool>("mean", true);
+    faItem.cubedMean_ = entry.lookupOrDefault<bool>("cubedMean", false);
+    faItem.prime2Mean_ = entry.lookupOrDefault<bool>("prime2Mean", false);
+    faItem.primeUPrimeMean_ = entry.lookupOrDefault<bool>("primeUPrimeMean", false);
+    faItem.base_ = faItem.baseTypeNames_[entry.lookupOrDefault<word>("base", "time")];
     faItem.window_ = entry.lookupOrDefault<scalar>("window", -1.0);
     faItem.windowName_ = entry.lookupOrDefault<word>("windowName", "");
 
