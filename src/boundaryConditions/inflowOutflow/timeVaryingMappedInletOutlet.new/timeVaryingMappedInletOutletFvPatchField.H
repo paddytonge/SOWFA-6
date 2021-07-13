@@ -82,8 +82,7 @@ namespace Foam
 template<class Type>
 class timeVaryingMappedInletOutletFvPatchField
 :
-    public mixedFvPatchField<Type>,
-    public timeVaryingMappedFixedValueFvPatchField<Type>
+    public mixedFvPatchField<Type>
 {
 
 protected:

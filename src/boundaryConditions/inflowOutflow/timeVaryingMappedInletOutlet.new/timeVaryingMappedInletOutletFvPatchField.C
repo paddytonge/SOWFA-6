@@ -46,20 +46,6 @@ Foam::timeVaryingMappedInletOutletFvPatchField<Type>::timeVaryingMappedInletOutl
 template<class Type>
 Foam::timeVaryingMappedInletOutletFvPatchField<Type>::timeVaryingMappedInletOutletFvPatchField
 (
-    const timeVaryingMappedInletOutletFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    mixedFvPatchField<Type>(ptf, p, iF, mapper),
-    phiName_(ptf.phiName_)
-{}
-
-
-template<class Type>
-Foam::timeVaryingMappedInletOutletFvPatchField<Type>::timeVaryingMappedInletOutletFvPatchField
-(
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
@@ -85,6 +71,20 @@ Foam::timeVaryingMappedInletOutletFvPatchField<Type>::timeVaryingMappedInletOutl
     this->refGrad() = Zero;
     this->valueFraction() = 0.0;
 }
+
+
+template<class Type>
+Foam::timeVaryingMappedInletOutletFvPatchField<Type>::timeVaryingMappedInletOutletFvPatchField
+(
+    const timeVaryingMappedInletOutletFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    mixedFvPatchField<Type>(ptf, p, iF, mapper),
+    phiName_(ptf.phiName_)
+{}
 
 
 template<class Type>
@@ -129,6 +129,13 @@ void Foam::timeVaryingMappedInletOutletFvPatchField<Type>::updateCoeffs()
     this->valueFraction() = 1.0 - pos0(phip);
 
     mixedFvPatchField<Type>::updateCoeffs();
+
+    timeVaryingMappedFixedValueFvPatchField<Type>* tvmio = 
+       dynamic_cast<timeVaryingMappedFixedValueFvPatchField<Type>*>
+       (
+           this
+       );
+    tvmio->evaluate();
 }
 
 

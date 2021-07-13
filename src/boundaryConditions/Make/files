@@ -12,7 +12,7 @@ $(surfaceHeatFluxModels)/specifiedSurfaceTemperature/specifiedSurfaceTemperature
 
 /* Inflow/Outflow Boundary Condition  */
 inflowOutflow = ./inflowOutflow
-$(inflowOutflow)/timeVaryingMappedInletOutlet/timeVaryingMappedInletOutletFvPatchFields.C
+$(inflowOutflow)/timeVaryingMappedInletOutlet.new/timeVaryingMappedInletOutletFvPatchFields.C
 
 
 LIB = $(SOWFA_LIBBIN)/libSOWFAboundaryConditions
