@@ -41,13 +41,23 @@ void Foam::buoyancyModel::updateBuoyancyTerm()
     // Compute the buoyancy term, depending on the definition of
     // the background pressure
 
+  //updateDensityField();
+
     if (backgroundPressureType_ == "noSplit")
     {
         buoyancyTerm_ = ((g_ & mesh_.Sf())/mesh_.magSf()) * fvc::interpolate(rhok_);
     }
     else if (backgroundPressureType_ == "rho0Split")
     {
+        Info << "--------------------------------------" << endl;
+        Info << "--------------------------------------" << endl;
+        Info << "updateBuoyancyTerm()" << endl;
+        Info << "g_: " << g_ << endl;
+        Info << "rhok_ - 1.0 = " << rhok_ - 1.0 << endl;
+        Info << "fvc::interpolate(rhok_ - 1.0) = " << fvc::interpolate(rhok_ - 1.0) << endl;
         buoyancyTerm_ = ((g_ & mesh_.Sf())/mesh_.magSf()) * fvc::interpolate(rhok_ - 1.0);
+        Info << "--------------------------------------" << endl;
+        Info << "--------------------------------------" << endl;
     }
     else if (backgroundPressureType_ == "rhokSplit")
     {
@@ -73,7 +83,24 @@ void Foam::buoyancyModel::updateBackgroundPressure()
 
 void Foam::buoyancyModel::updateDensityField()
 {
+    Info << "--------------------------------------" << endl;
+    Info << "--------------------------------------" << endl;
+    Info << "updateDensityField()" << endl;
+    Info << "T_: " << T_ << endl;
+    Info << "TRef_: " << TRef_ << endl;
     rhok_ = 1.0 - ( (T_ - TRef_)/TRef_ );
+    Info << "rhok_ (before correctBoundaryConditions): " << rhok_ << endl;
+    rhok_.correctBoundaryConditions();
+    Info << "rhok_ (after correctBoundaryConditions): " << rhok_ << endl;
+    Info << "--------------------------------------" << endl;
+    Info << "--------------------------------------" << endl;
+}
+
+void Foam::buoyancyModel::update()
+{
+    updateDensityField();
+    updateBuoyancyTerm();
+    updateBackgroundPressure();
 }
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -120,7 +147,9 @@ Foam::buoyancyModel::buoyancyModel
         (
             "rhok",
             runTime_.timeName(),
-            mesh_
+            mesh_,
+            IOobject::READ_IF_PRESENT,
+            IOobject::AUTO_WRITE
         ),
         1.0 - ( (T - TRef)/TRef )
     ),

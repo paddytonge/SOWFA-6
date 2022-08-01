@@ -117,6 +117,14 @@ public:
         //- Update density field 
         void updateDensityField();
 
+        //- Update all buoyancy-related quantities.
+        void update();
+
+        volScalarField& rhok()
+        {
+            return rhok_;
+        }
+
         //- Return bakcground pressure
         volScalarField& backgroundPressure()
         {

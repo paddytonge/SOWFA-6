@@ -74,10 +74,50 @@ int main(int argc, char *argv[])
     // Update boundary conditions before starting in case anything needs
     // updating, for example after using mapFields to interpolate initial
     // field.
-    U.correctBoundaryConditions();
-    phi = linearInterpolate(U) & mesh.Sf();
+    Info << "U " << U << endl;
+    Info << "phi " << phi << endl;
+  //U.correctBoundaryConditions();
+  //Info << "U " << U << endl;
+  //Info << "phi " << phi << endl;
+  //phi = linearInterpolate(U) & mesh.Sf();
+  //Info << "phi " << phi << endl;
     #include "turbulenceCorrect.H"
-    T.correctBoundaryConditions();
+    /*
+    for (int i = 0; i < Pstream::nProcs(); i++)
+    {
+        if (Pstream::myProcNo() == 1)
+        {
+            sleep(2);
+        }
+        if (Pstream::myProcNo() == i)
+        {
+            Pout << "Processor No. " << i << endl;
+            Pout << "nOldTimes " << T.nOldTimes() << endl;
+            Pout << "T: " << endl << T << endl;
+            Pout << "T.oldTime: " << endl << T.oldTime() << endl;
+            Pout << "rhok: " << endl << Boussinesq.rhok() << endl;
+            Pout << "buoyancyTerm: " << endl << Boussinesq.buoyancyTerm() << endl;
+        }
+    }
+    */
+    //T.correctBoundaryConditions();
+    Info << "T.nOldTimes() " << T.nOldTimes() << endl;
+    Info << "U.nOldTimes() " << U.nOldTimes() << endl;
+    Info << "T: " << T << endl;
+    Info << "T.oldTime: " << T.oldTime() << endl;
+  //Boussinesq.updateDensityField();
+    for (int i = 0; i < Pstream::nProcs(); i++)
+    {
+        if (Pstream::myProcNo() == 1)
+        {
+            sleep(2);
+        }
+        if (Pstream::myProcNo() == i)
+        {
+            Pout << "rhok: " << Boussinesq.rhok() << endl;
+            Pout << "buoyancyTerm: " << Boussinesq.buoyancyTerm() << endl;
+        }
+    }
 
     // Time stepping loop.
     while (runTime.run())
@@ -115,13 +155,23 @@ int main(int argc, char *argv[])
 
             // Update damping layers forcing
             spongeLayers.update();
+    
+            Boussinesq.update();
 
             // Predictor step.
             Info << "   Predictor" << endl;
 
+            Info << "T: " << T << endl;
+            Info << "rhok: " << Boussinesq.rhok() << endl;
+            Info << "buoyancyTerm: " << Boussinesq.buoyancyTerm() << endl;
             #include "UEqn.H"
             #include "turbulenceCorrect.H"
             #include "TEqn.H"
+            Info << "T: " << T << endl;
+            Info << "rhok: " << Boussinesq.rhok() << endl;
+            Info << "buoyancyTerm: " << Boussinesq.buoyancyTerm() << endl;
+            Info << "T.nOldTimes() " << T.nOldTimes() << endl;
+            Info << "U.nOldTimes() " << U.nOldTimes() << endl;
 
             // Corrector steps.
             int corrIter = 1;
@@ -132,6 +182,7 @@ int main(int argc, char *argv[])
                 #include "pEqn.H"
                 #include "turbulenceCorrect.H"
                 #include "TEqn.H"
+                Info << "T.nOldTimes() " << T.nOldTimes() << endl;
 
                 corrIter++;
             }
@@ -141,6 +192,9 @@ int main(int argc, char *argv[])
             if (limitOuterLoop)
             {
                 while (pimple.loop());
+                Info << "T.nOldTimes() " << T.nOldTimes() << endl;
+                Info << "U.nOldTimes() " << U.nOldTimes() << endl;
+                Info << "p_rgh.nOldTimes() " << p_rgh.nOldTimes() << endl;
                 Info << endl;
                 break;
             }
@@ -156,6 +210,15 @@ int main(int argc, char *argv[])
 
         // Write the solution if at write time.
         runTime.write();
+
+        Info << "T: " << T << endl;
+        Info << "T.oldTime(): " << T.oldTime() << endl;
+        Info << "T.oldTime().oldTime(): " << T.oldTime().oldTime() << endl;
+        Info << "rhok: " << Boussinesq.rhok() << endl;
+        Info << "buoyancyTerm: " << Boussinesq.buoyancyTerm() << endl;
+        Info << "T.nOldTimes() " << T.nOldTimes() << endl;
+        Info << "U.nOldTimes() " << U.nOldTimes() << endl;
+        Info << "p_rgh.nOldTimes() " << p_rgh.nOldTimes() << endl;
 
         // Report timing.
         Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"

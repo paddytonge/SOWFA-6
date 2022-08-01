@@ -49,6 +49,7 @@ volScalarField T
     ),
     mesh
 );
+T.correctBoundaryConditions();
 
 
 // Create and read the modified pressure field [m^2/s^2].
@@ -81,6 +82,7 @@ volVectorField U
     ),
     mesh
 );
+U.correctBoundaryConditions();
 
 
 // Create and calculate the velocity flux [m^3/s].

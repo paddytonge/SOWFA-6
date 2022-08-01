@@ -21,7 +21,9 @@
 
     TEqn.solve();
 
+    T.correctBoundaryConditions();
+
     fvOptions.correct(T);
 
-    Boussinesq.updateDensityField();
+    Boussinesq.update();
 }

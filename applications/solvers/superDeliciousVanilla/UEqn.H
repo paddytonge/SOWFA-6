@@ -4,7 +4,7 @@
     Coriolis.update();
 
     // Update buoyancy term
-    Boussinesq.updateBuoyancyTerm();
+  //Boussinesq.updateBuoyancyTerm();
 
     fvVectorMatrix UEqn
     (
