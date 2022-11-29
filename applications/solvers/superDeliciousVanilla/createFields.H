@@ -259,6 +259,14 @@
     vector hRef_ = vector::zero;
     dimensionedVector hRef("hRef",dimLength,hRef_);
 
+
+    // >>>
+
+    List<point> = pRefPoints(2);
+    pRefPoints[0] = 
+
+    // <<<
+
     if (p_rgh.needReference())
     {
         Info << "Pressure reference needed in this case" << endl;
