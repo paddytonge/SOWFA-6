@@ -262,9 +262,29 @@
 
     // >>>
 
-    List<point> = pRefPoints(2);
-    pRefPoints[0] = 
+    scalar xDiv = 5040.0;
+    List<point> refPoints(2,point(Zero));
 
+    refPoints[0].x() = xDiv - 0.1; 
+    refPoints[1].x() = xDiv + 0.1; 
+
+    refPoints[0].y() = 40.1;
+    refPoints[1].y() = 40.1;
+
+    refPoints[0].z() = 10000.0 - 0.1;
+    refPoints[1].z() = 10000.0 - 0.1;
+
+    
+    List<label> refCells(2,label(-1));
+    
+    refCells[0] = mesh.findCell(refPoints[0]);
+    refCells[1] = mesh.findCell(refPoints[1]);
+
+    Info << "refCells: " << endl;
+    Pout << refCells << endl;
+    Pout << mesh.C()[refCells[0]] << endl;
+    Pout << mesh.C()[refCells[1]] << endl;
+    
     // <<<
 
     if (p_rgh.needReference())
