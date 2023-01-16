@@ -4,6 +4,7 @@
 
 ### OPENFAST ###
 
+# Make an OpenFOAM directory in your home directory to keep SOWFA and OpenFAST in (skip if you already have an OpenFOAM directory)
 cd $HOME
 mkdir OpenFOAM
 cd OpenFOAM
@@ -37,8 +38,6 @@ make install
 # Check that /include/OpenFAST.H exists
 
 ### SOWFA ###
-
-# Make an OpenFOAM directory in your home directory (skip if this already exists)
 
 cd OpenFOAM
 
