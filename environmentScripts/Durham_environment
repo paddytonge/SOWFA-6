@@ -54,7 +54,7 @@ SOWFA_DURHAM()
    export SOWFA_DIR=$sowfa_loc
    export SOWFA_APPBIN=$SOWFA_DIR/platforms/$WM_OPTIONS/bin
    export SOWFA_LIBBIN=$SOWFA_DIR/platforms/$WM_OPTIONS/lib
-   export OPENFAST_DIR=$HOME/openfast
+   export OPENFAST_DIR=$HOME/OpenFOAM/openfast
    export LD_LIBRARY_PATH=$SOWFA_LIBBIN:$OPENFAST_DIR/lib:$LD_LIBRARY_PATH
    export PATH=$SOWFA_APPBIN:$OPENFAST_DIR/bin:$PATH
 }
