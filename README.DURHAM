@@ -1,9 +1,43 @@
-###### SOWFA COMPILATION INSTRUCTIONS FOR HAMILTON USERS AT DURHAM UNIVERSITY ######
+###### SOWFA AND OPENFAST COMPILATION INSTRUCTIONS FOR HAMILTON USERS AT DURHAM UNIVERSITY ######
 
+### OPENFAST ###
 
-# Make an OpenFOAM directory in your home directory (skip if this already exists)
 cd $HOME
 mkdir OpenFOAM
+cd OpenFOAM
+
+module purge
+module load cmake intel mkl openblas openmpi hdf5
+
+# Get openfast source code
+git clone -b v3.1.0-branch https://github.com/mchurchf/openfast.git
+cd openfast
+
+# Make a build directory and go there
+mkdir build
+cd build
+
+# Make the build files 
+cmake \
+    -DCMAKE_C_COMPILER=icc \
+    -DCMAKE_CXX_COMPILER=icpc \
+    -DCMAKE_Fortran_COMPILER=ifort \
+    -DCMAKE_INSTALL_PREFIX="$HOME/OpenFOAM/openfast" \
+    -DFPE_TRAP_ENABLED=ON \
+    -DBUILD_OPENFAST_CPP_API:BOOL=ON \
+    -DBUILD_SHARED_LIBS:BOOL=ON \
+    ../
+
+# Compile 
+make
+make install
+
+# Check that /include/OpenFAST.H exists
+
+### SOWFA ###
+
+# Make an OpenFOAM directory in your home directory (skip if this already exists)
+
 cd OpenFOAM
 
 # Clone the SOWFA source code
