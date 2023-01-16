@@ -9,6 +9,7 @@ cd $HOME
 mkdir OpenFOAM
 cd OpenFOAM
 
+# Load dependencies
 module purge
 module load cmake intel mkl openblas openmpi hdf5
 
