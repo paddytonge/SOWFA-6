@@ -1,0 +1,27 @@
+###### SOWFA COMPILATION INSTRUCTIONS FOR HAMILTON USERS AT DURHAM UNIVERSITY ######
+
+
+# Make an OpenFOAM directory in your home directory (skip if this already exists)
+cd $HOME
+mkdir OpenFOAM
+cd OpenFOAM
+
+# Clone the SOWFA source code
+git clone -b latest https://github.com/mwilliams2112/SOWFA-6.git
+cd SOWFA-6
+
+# Load the OpenFOAM-6 environment
+module load openfoam/6/20190620
+source $OPENFOAM_HOME/OpenFOAM/etc/bashrc
+
+# Load the SOWFA environment
+source environmentScripts/Durham_environment
+SOWFA_DURHAM
+
+# Compile the codes 
+./Allwclean
+chmod +x Allwmake
+./Allwmake
+
+# Check that /platforms/bin/superDeliciousVanilla exists
+
