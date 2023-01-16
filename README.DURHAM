@@ -2,6 +2,8 @@
 
 ###### SOWFA AND OPENFAST COMPILATION INSTRUCTIONS FOR HAMILTON USERS AT DURHAM UNIVERSITY ######
 
+# Copy and paste line by line (except for the cmake command where stated). To paste into terminal, hold shift and press insert ~
+
 ### OPENFAST ###
 
 # Make an OpenFOAM directory in your home directory to keep SOWFA and OpenFAST in (skip if you already have an OpenFOAM directory)
@@ -21,7 +23,7 @@ cd openfast
 mkdir build
 cd build
 
-# Make the build files 
+# Make the build files (copy and paste this whole chunk)
 cmake \
     -DCMAKE_C_COMPILER=icc \
     -DCMAKE_CXX_COMPILER=icpc \
