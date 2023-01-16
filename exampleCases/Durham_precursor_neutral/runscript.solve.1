@@ -1,0 +1,53 @@
+#!/bin/bash
+#SBATCH --job-name=solve
+#SBATCH -o runscript.solve.1.log
+#SBATCH -e runscript.solve.1.err
+#SBATCH -n 512   # Change on setUp as well
+#SBATCH -p multi      
+#SBATCH -t 48:00:00
+#SBATCH --mail-user=matt.e.williams@durham.ac.uk
+#SBATCH --mail-type=ALL
+
+
+
+source /home/tvkw79/OpenFOAM/SOWFA-latest/SOWFA-6/environmentScripts/OF-6-env-gcc-central
+OpenFOAM-6-gcc-central
+
+
+
+# User input.
+cores=512
+
+initializer=setFieldsABL
+solver=superDeliciousVanilla
+runNumber=1
+
+
+
+
+
+echo "Starting OpenFOAM job at: " $(date)
+echo "using " $cores " cores"
+echo "with modules:"
+module list
+
+
+
+cd system
+rm controlDict
+ln -s controlDict.$runNumber controlDict
+cd ..
+
+# Run the flow field initializer (parallel)
+if [ $runNumber -eq 1 ]
+   then
+   mpirun $initializer -parallel > log.$runNumber.$initializer 2>&1
+fi
+
+# Run the solver (parallel)
+mpirun $solver -parallel > log.$runNumber.$solver 2>&1
+
+
+
+
+echo "Ending OpenFOAM job at: " $(date)

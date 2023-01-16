@@ -1,0 +1,127 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  6
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    version         2.0;
+    format          ascii;
+
+    root            "";
+    case            "";
+    instance        "";
+    local           "";
+
+    class           dictionary;
+    object          ABLProperties;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include        "../setUp"
+
+
+
+
+// Properties of the background forcing source term for momentum
+momentumSource
+{
+    type        "computed";
+    inputType   "speedAndDirection";
+
+    //Relaxation factor (only used when type is "computed")
+    gain        0.7;
+
+    sourceHeightsMomentum
+    (
+        $windControlHeight
+    );
+
+    sourceTableMomentumX
+    (
+        (    0.0 $windSpeed)
+        (90000.0 $windSpeed)
+    );
+
+    sourceTableMomentumY
+    (
+        (    0.0 $windDir)
+        (90000.0 $windDir)
+    );
+
+    sourceTableMomentumZ
+    (
+        (    0.0 0.0)
+        (90000.0 0.0)
+    );
+}
+
+
+
+
+// Properties of the background forcing source term for temperature
+temperatureSource
+{
+    type        "given";
+
+    //Relaxation factor (only used when type is "computed")
+    gain        0.7;
+
+    sourceHeightsTemperature
+    (
+        $windControlHeight
+    );
+
+    sourceTableTemperature
+    (
+        (    0.0 0.0)
+        (90000.0 0.0)
+    );
+}
+
+
+
+
+// Damping layer parameters.
+spongeList
+{
+    upperSponge
+    {
+        type             "Rayleigh";               // Type of sponge layer: "none" (Default), "Rayleigh" or "viscous".
+        patch            "upper";                  // Apply patch on a specific patch.
+        width            480.0;                    // Width of the sponge layer (m). Set this variable is constant, or
+        dampCoeffMax     0.05;                     // Maximum damping coefficient, dimensions depend on type of damping:
+        cosFraction      1.0;                      // Fraction of the layer's width that has a smooth transition of viscosity
+        dampingComp      "vertical";               // Components to be damped: "horizontal" for x and y, or "vertical" for z
+                                                   //    if "horizontal" and "Rayleigh", Ux and Uy need to be specified
+    }
+}
+
+
+
+// Properties of the Coriolis force
+planetaryRotationPeriod   $EarthPeriod;
+latitude                  $latitude;
+
+
+
+// Define hydrostatic state to be rho_0 * g * z
+perturbationPressureType  "rho0Split";
+
+
+
+// Should flux on boundaries be updated at restart
+updatePhiBoundariesOnRestart  false;
+
+
+
+// Write out postProcessing/sourceHistory
+writeSource             $writeSource;
+writeSourceInterval     $writeSourceInterval;
+
+
+// ************************************************************************* //
