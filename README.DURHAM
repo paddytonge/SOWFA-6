@@ -42,7 +42,7 @@ make install
 
 ### SOWFA ###
 
-cd OpenFOAM
+cd $HOME/OpenFOAM
 
 # Clone the SOWFA source code
 git clone -b latest https://github.com/mwilliams2112/SOWFA-6.git
