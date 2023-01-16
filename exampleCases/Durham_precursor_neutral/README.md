@@ -10,11 +10,11 @@ this needs to be changed in setUp as well as the decomposition order if using si
 NOTE: For paraview visualisation, you will need to purge loaded modules, then do 'module load openfoam', 'source $OPENFOAM_HOME/OpenFOAM/etc/bashrc', 
       and finally 'module load paraview'
 
-To run the simulation, excute 
+To run the simulation, execute:
 
 sbatch runscript.preprocess
 
-You may want to then check the mesh with paraview. Once completed, continue the simulation by executing
+You may want to then check the mesh with paraview. Once completed, continue the simulation by executing:
 
 sbatch runscript.solve.1
 
