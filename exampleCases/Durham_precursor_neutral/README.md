@@ -7,7 +7,7 @@ Make sure installation locations and paths are correctly set in the environmentS
 Adjust the slurm text at the top of runscript.preprocess and runscript.solve.1 to make it email you. If a different number of cores is selected in runscript.solve.1,
 this needs to be changed in setUp as well as the decomposition order if using simple. 
 
-NOTE: For paraview visualisation, you will need to purge loaded modules, then do 'module load openfoam',' source $OPENFOAM_HOME/etc/bashrc', 
+NOTE: For paraview visualisation, you will need to purge loaded modules, then do 'module load openfoam',' source $OPENFOAM_HOME/OpenFOAM/etc/bashrc', 
       and finally 'module load paraview'
 
 To run the simulation, excute 
