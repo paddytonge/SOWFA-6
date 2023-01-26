@@ -6,6 +6,6 @@ sed "s/)//g" U > U2
 sed "s/(//g" U2 > U3
 
 rm U U2
-mv U3 U3.txt
+mv U3 U.txt
 
 
