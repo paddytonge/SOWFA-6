@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Simple script that converts U into a MATLAB-readable format
+
+sed "s/)//g" U > U2
+sed "s/(//g" U2 > U3
+
+rm U U2
+mv U3 U3.txt
+
+
