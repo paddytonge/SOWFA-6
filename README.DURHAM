@@ -2,6 +2,8 @@
 
 ###### SOWFA AND OPENFAST COMPILATION INSTRUCTIONS FOR HAMILTON USERS AT DURHAM UNIVERSITY ######
 
+Last test: 09/02/2023
+
 # Copy and paste line by line (except for the cmake command where stated). To paste into terminal, hold shift and press insert ~
 
 ### OPENFAST ###
