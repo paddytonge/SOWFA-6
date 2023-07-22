@@ -59,6 +59,10 @@ source $OPENFOAM_HOME/OpenFOAM/etc/bashrc
 source environmentScripts/Durham_environment
 SOWFA_DURHAM
 
+*** (Please note that sourcing the 'Durham_environment' file tells the system where SOWFA has been installed. If you follow these instructions exactly, this location
+is configured correctly however if you choose to install SOWFA in a different location, you will need to change the $sowfa_loc environment variable. The
+same goes for the location of Openfast) ***
+
 # Compile the codes 
 ./Allwclean
 chmod +x Allwmake
