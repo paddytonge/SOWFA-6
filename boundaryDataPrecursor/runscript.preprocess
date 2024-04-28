@@ -5,12 +5,12 @@
 #SBATCH -n 1
 #SBATCH -p multi
 #SBATCH -t 5:00:00
-#SBATCH --mail-user=matt.e.williams@durham.ac.uk
+#SBATCH --mem=60G
 #SBATCH --mail-type=ALL
 
 
 
-source /home/tvkw79/OpenFOAM/SOWFA-6/environmentScripts/Durham_environment
+source /home/ptjh72/OpenFOAM/SOWFA-6/environmentScripts/Durham_environment
 SOWFA_DURHAM
 
 
